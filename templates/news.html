@@ -1,0 +1,37 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+News
+{% endblock title %}
+
+{% block content %}
+   <h1>Все новости</h1>
+       
+   <hr>
+   {% if news_list %}
+       <table>
+           <tr>
+               <td>Название</td>
+               <td>Дата публиуации</td>
+               <td>Содежание</td>
+           </tr>
+          
+           {% for post in news_list %}
+           <tr>
+               <!-- Не забываем, что переменные в шаблоне ничем не отличаются
+
+                от переменных в Python. Здесь также можно получать доступ к
+                полям объекта модели. Например, здесь мы выводим имя,
+                в следующем столбце описание, и т.д.  -->
+               <td>{{ post.post_title|truncatewords:2 }}</td>
+               <td>{{ post.create_time }}</td>
+               <td>{{ post.post_text|truncatechars:20 }}</td>
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>Новостей нет!</h2>
+
+   {% endif %}
+{% endblock content %}

@@ -1,0 +1,38 @@
+{% extends "account/base.html" %}
+
+{% load socialaccount %}
+
+{% block content %}
+
+<h2> Войти в систему </h2>
+
+<form method="post" action="{% url 'login' %}">
+{% csrf_token %}
+<table>
+<tr>
+    <td>{{ form.username.label_tag }}</td>
+    <td>{{ form.username }}</td>
+</tr>
+<tr>
+    <td>{{ form.password.label_tag }}</td>
+    <td>{{ form.password }}</td>
+</tr>
+</table>
+
+<input type="submit" value="Войти">
+</form>
+<button> <a href="/sign/signup"> Регистрация </a></button>
+<hr>
+
+{% get_providers as socialaccount_providers %}
+<p>Войти через:</p>
+{% for provider in socialaccount_providers %}
+    {% if provider.id == "openid" %}
+        {% for brand in provider.get_brands %}
+            <a title="{{brand.name}}" class="{{provider.id}} {{brand.id}}" href="{% provider_login_url provider.id openid=brand.openid_url process=process %}">{{brand.name}}</a>
+        {% endfor %}
+    {% endif %}
+    <a title="{{provider.name}}" class="{{provider.id}}" href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
+{% endfor %}
+
+{% endblock %}

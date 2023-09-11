@@ -1,0 +1,85 @@
+{% extends 'flatpages/default.html' %}
+{% load static %}
+
+{% block title %}
+Categories
+{% endblock title %}
+
+{% block content %}
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <tr class="nav navbar-nav navbar-right">
+      <li><a href="news/search/">Поиск поста</a></li>
+      <li class="dropdown">
+        <button class="dropbtn"><b style = "font-size: 15px">Создать пост</b></button>
+        <div class="dropdown-content">
+          <a href="/news/create/">Создать новость</a>
+          <a href="/article/create/">Создать статью</a>
+        </div>
+      </li>
+    </tr>
+  </div>
+</div>
+  <div class="container wb">
+    <div class="row centered" style= "width: 1710px;">
+      <br><br>
+      <div class="col-lg-8 col-lg-offset-2">
+        <h4>Список новостей</h4>
+        {% if is_not_subscriber %}
+        <button class ="buton"><a href = "{% url 'subscribe' category.id %}">Подписаться</a></button>
+        {% endif %}
+        <br><br>
+        <table class="table_sort">
+          <thead>
+            <tr>
+              <th>ID поста</th>
+              <th>Дата создания</th>
+              <th>Статья/Новость</th>
+              <th>Автор</th>
+              <th>Рейтинг поста</th>
+              <th>Заголовок</th>
+              <th>Текст</th>
+              <th>Категория</th>
+            </tr>
+          </thead>
+              {% for post_n in category_news_list %}
+          <tr>
+            <td>{{ post_n.pk }}</td>
+            <td>{{ post_n.create_time }}</td>
+            <td>{{ post_n.post_type }}</td>
+            <td>{{ post_n.author }}</td>
+            <td>{{ post_n.rating }}</td>
+            <td class="leftAligned"><a href=/news/{{ post_n.pk }}>{{ post_n.post_title|truncatechars:20}}</a></td>
+            <td>{{ post_n.post_text|truncatechars:20}}</td>
+            <td>{% for category in post_n.categories.all %}
+                  <a href = "{% url 'category_list' category.id %}">{{ category }}</a>
+                {% endfor %}
+            </td>
+          </tr>
+              {% endfor %}
+        </table>
+        <p><br><br></p>
+      </div>
+  </div>
+    <hr />
+    <div class="container">
+      <div class="row centered" style= "width: 1710px;">
+        <div class="col-lg-8 col-lg-offset-2">
+          {% if request.user.is_authenticated %}
+            <h4>Страница авторизованного пользователя {{request.user.username}}</h4>
+            <a href="{% url 'account_logout' %}"><button class="buton">Выйти</button></a>
+            {% if is_not_author %}
+              <a href="upgrade/"><button class="buton">Хочу стать автором!</button></a>
+            {% endif %}
+          {% else %}
+            <h1>Вы не вошли в систему!</h1>
+            <a href="{% url 'account_login' %}"><button class="buton">Войти</button></a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <hr />
+  </div>
+
+{% endblock %}

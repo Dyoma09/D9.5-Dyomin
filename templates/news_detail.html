@@ -1,0 +1,18 @@
+{% extends 'flatpages/default.html' %}
+
+{% load static %}
+
+{% load cancer_filter %}
+
+{% block title %}
+News
+{% endblock title %}
+
+{% block content %}
+<h1>{{ news.post_title|censor }}</h1>
+<hr>
+<h4>{{ news.post_text|censor }}</h4>
+<hr>
+<p align="right">{{ news.create_time|date:'M d Y' }}</p>
+
+{% endblock content %}

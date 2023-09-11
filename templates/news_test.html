@@ -1,0 +1,73 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+News
+{% endblock title %}
+
+{% block content %}
+   <h1>Все новости</h1>
+
+   <hr />
+   <div class="container">
+     <div class="row centered" style= "width: 1710px;">
+       <div class="col-lg-8 col-lg-offset-2">
+         {% if request.user.is_authenticated %}
+           <p>Страница авторизованного пользователя {{request.user.username}}</p>
+           <a href="{% url 'account_logout' %}"><button class="buton">Выйти</button></a>
+           {% if is_not_author %}
+             <a href="upgrade/"><button class="buton">Хочу стать автором!</button></a>
+           {% endif %}
+         {% else %}
+           <p>Вы не вошли в систему!</p>
+           <a href="{% url 'login' %}"><button class="buton">Войти</button></a>
+           <a href="{% url 'signup' %}"><button class="buton">Регистрация</button></a>
+         {% endif %}
+       
+   <hr>
+   {% if news_list %}
+          
+    {% for post in news_list %}
+               <!-- Не забываем, что переменные в шаблоне ничем не отличаются
+
+                от переменных в Python. Здесь также можно получать доступ к
+                полям объекта модели. Например, здесь мы выводим имя,
+                в следующем столбце описание, и т.д.  -->
+            <p align="left">
+                <strong>
+                    {{ post.post_title }}
+                </strong>
+            </p>            
+            <p align="left">
+                {{ post.create_time }}
+            </p>
+            <p align="left">
+                {{ post.post_text|truncatechars:20 }}
+            </p>
+            
+                          
+    {% endfor %}
+
+{% else %}
+    <h2>Новостей нет!</h2>
+
+{% endif %}
+
+{% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+{% endblock content %}
