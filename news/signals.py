@@ -52,7 +52,7 @@ def send_to_email(name, mail):
 
     msg = EmailMultiAlternatives(
         subject=name,
-        body='',
+        body= "",
         from_email=DEFAULT_FROM_EMAIL,
         to=mail,
     )
@@ -63,7 +63,7 @@ def send_to_email(name, mail):
 @receiver(post_save, sender=User)
 def reg_message(sender, instance, created, **kwargs):
     if created:
-        name = instance.username
+        name = f'{instance.last_name} {instance.first_name}'
         mail = instance.email
         send_to_email(name, [mail])
 
